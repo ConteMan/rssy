@@ -1,0 +1,8 @@
+rssy
+*.exe
+web/node_modules
+web/dist
+.git
+.gitignore
+.DS_Store
+README.md
