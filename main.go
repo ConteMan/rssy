@@ -7,6 +7,8 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"rssy/internal/handler"
@@ -18,6 +20,14 @@ var staticFiles embed.FS
 func main() {
 	port := flag.Int("port", 8080, "server port")
 	flag.Parse()
+
+	// Environment variable takes precedence
+	portNum := *port
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		if p, err := strconv.Atoi(envPort); err == nil {
+			portNum = p
+		}
+	}
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -41,7 +51,7 @@ func main() {
 		c.FileFromFS(c.Request.URL.Path, http.FS(distFS))
 	})
 
-	addr := fmt.Sprintf(":%d", *port)
+	addr := fmt.Sprintf(":%d", portNum)
 	log.Printf("Starting rssy server on http://localhost%s", addr)
 	if err := r.Run(addr); err != nil {
 		log.Fatal("Failed to start server:", err)

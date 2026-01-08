@@ -20,5 +20,6 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /app
 COPY --from=backend /app/rssy .
+ENV PORT=8080
 EXPOSE 8080
-CMD ["./rssy", "-port", "8080"]
+CMD ["./rssy"]
